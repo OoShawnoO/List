@@ -1,43 +1,5 @@
 #include <iostream>
-
-
-const int Len=100;
-
-template<class type>
-class LinearList{
-private:
-    type list[Len];
-    int length;
-public:
-    LinearList():length(0)
-    {
-        Initialize();
-    }
-    LinearList(const LinearList & l):length(l.length){
-        for(int i=0;i<l.length;i++){
-            list[i] = l.list[i];
-        }
-//        printf("%p %p",l.list[0],list[0]);
-        this->length = l.length;
-    }
-    void EmptyList();
-    int Length();
-    type Get(int index);
-    type Pre(int index);
-    type Next(int index);
-    int Index(type x);
-    int Insert(type x,int index);
-    int DeleteByVar(type x);
-    int DeleteByIndex(int index);
-    void Clear();
-    int IsEmpty();
-    void Initialize();
-    void Traverse();
-    int Update(int index,type x);
-    int Sort();
-
-
-};
+#include "main.h"
 
 template <class type>
 void LinearList<type>::EmptyList() {
@@ -179,6 +141,55 @@ int LinearList<type>::Sort() {
     }
     return 1;
 }
+
+/* Link List Define*/
+
+template <class type>
+int LinkList<type>::Length(){
+    int count = 0;
+    while(next!=NULL){
+        count++;
+        this = this->next;
+    }
+    return count;
+}
+
+template <class type>
+void LinkList<type>::Initialize() {
+    auto ptr = new LinkList<type>;
+    ptr.data=-1;
+    ptr->next = nullptr;
+    this = ptr;
+}
+
+template <class type>
+int LinkList<type>::Insert(type x,int index){
+    if(index>Length()){return -1;}
+    else{
+        auto ptr = this;
+
+        int i = 0;
+        while(i<index-1){
+            ptr = ptr->next;
+            i++;
+        }
+        auto aptr = ptr->next;
+        if(aptr!=nullptr){
+            auto y = new LinkList<type>;
+            y->data = x;
+            y->next = aptr;
+            ptr->next = y;
+            return 1;
+        }
+        else{
+            auto y = new LinkList<type>;
+            y->data = x;
+            ptr->next = y;
+            return 1;
+        }
+    }
+}
+
 
 int main() {
     LinearList<int> ls;
