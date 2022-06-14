@@ -1,26 +1,40 @@
 #include <iostream>
-#include <fstream>
-
 #include "main.h"
 
 using namespace std;
 
 template <class type>
-void LinearList<type>::EmptyList() {
-    for(auto & x:this->list){
-        x = NULL;
+LinearList<type>::LinearList(int Length):Len(Length),length(0){
+    list = new type[Len];
+    for(int i=0;i<Len;i++){
+        list[i] = NULL;
     }
 }
 
 template <class type>
-int LinearList<type>::Length() {
-    return this->length;
+LinearList<type>::LinearList(const LinearList<type>& l):length(l.length){
+    for(int i=0;i<l.length;i++){
+        list[i] = l.list[i];
+    }
+    length = l.length;
 }
 
 template <class type>
-type LinearList<type>::Get(int index) {
+void LinearList<type>::EmptyList() {
+    for(int i=0;i<Len;i++){
+        list[i] = NULL;
+    }
+}
+
+template <class type>
+int LinearList<type>::Length() const {
+    return length;
+}
+
+template <class type>
+type LinearList<type>::Get(int index) const {
     if(index>=0&&index<=Len){
-        return this->list[index];
+        return list[index];
     }
     else {
         printf("Out of List!");
@@ -29,14 +43,14 @@ type LinearList<type>::Get(int index) {
 }
 
 template <class type>
-type LinearList<type>::Pre(int index) {
-    if(index-1>=0){return this->list[index];}
-    else{printf("Out of List!");return NULL;}
+type LinearList<type>::Pre(int index) const {
+    if(index-1>=0){return list[index];}
+    else{printf("Out of List!\n");return NULL;}
 }
 
 template <class type>
-type LinearList<type>::Next(int index) {
-    if(index+1<=Len&&index+1>=0){return this->list[index+1];}
+type LinearList<type>::Next(int index) const {
+    if(index+1<=Len&&index+1>=0){return list[index+1];}
     else{
         printf("Out of List!");
         return NULL;
@@ -44,22 +58,27 @@ type LinearList<type>::Next(int index) {
 }
 
 template <class type>
-int LinearList<type>::Index(type x) {
+int LinearList<type>::Index(type x) const {
     int index = 0;
     for(;index<Len;index++){
-        if(x==this->list[index]){return index;}
+        if(x==list[index]){return index;}
     }
     return -1;
 }
 
+template<class type>
+int LinearList<type>::Insert(type x) {
+    return Insert(x,length);
+}
+
 template <class type>
 int LinearList<type>::Insert(type x,int index) {
-    if(this->length+1>Len){return -1;}
+    if(length+1>Len){return -1;}
     else{
-        this->length++;
-        for(;index<=this->length;index++){
-            int temp = this->list[index];
-            this->list[index] = x;
+        length++;
+        for(;index<=length;index++){
+            int temp = list[index];
+            list[index] = x;
             x = temp;
         }
         return 1;
@@ -69,10 +88,10 @@ int LinearList<type>::Insert(type x,int index) {
 template <class type>
 int LinearList<type>::DeleteByIndex(int index) {
     if(index>=0&&index<=Len){
-        for(int i=index;i<this->length;i++){
-            this->list[i] = this->list[i+1];
+        for(int i=index;i<length;i++){
+            list[i] = list[i+1];
         }
-        this->length--;
+        length--;
         return 1;
     }
     else{
@@ -87,10 +106,10 @@ int LinearList<type>::DeleteByVar(type x) {
 
 template <class type>
 void LinearList<type>::Clear() {
-    for(int i=0;i<this->length;i++){
-        this->list[i] = NULL;
+    for(int i=0;i<length;i++){
+        list[i] = NULL;
     }
-    this->length = 0;
+    length = 0;
 }
 
 template <class type>
@@ -103,15 +122,14 @@ int LinearList<type>::IsEmpty() {
     }
 }
 
-
 template <class type>
-void LinearList<type>::Traverse() {
-    for(int i=0;i<this->length;i++){
-        cout<<i<<' ';
+void LinearList<type>::Traverse() const {
+    for(int i=0;i<length;i++){
+        cout<<"|"<<i<<"|";
     }
     printf("\n");
-    for(int i=0;i<this->length;i++){
-        cout<<list[i]<<' ';
+    for(int i=0;i<length;i++){
+        cout<<"|"<<list[i]<<"|";
     }
     printf("\n");
 }
@@ -119,7 +137,7 @@ void LinearList<type>::Traverse() {
 template <class type>
 int LinearList<type>::Update(int index, type x) {
     if(index>=0&&index<=Len){
-        this->list[index] = x;
+        list[index] = x;
         return 1;
     }
     else{
@@ -129,19 +147,32 @@ int LinearList<type>::Update(int index, type x) {
 
 template <class type>
 int LinearList<type>::Sort() {
-    for(int i=0;i<this->length-1;i++){
-        for(int j=i+1;j<this->length;j++){
-            if(this->list[i]<this->list[j]){
-                int temp = this->list[j];
-                this->list[j] = this->list[i];
-                this->list[i] = temp;
+    for(int i=0;i<length-1;i++){
+        for(int j=i+1;j<length;j++){
+            if(list[i]<list[j]){
+                int temp = list[j];
+                list[j] = list[i];
+                list[i] = temp;
             }
         }
     }
     return 1;
 }
 
+template <class type>
+void LinearList<type>::operator+(const LinearList<type>& ll){
+    for(int i=0;i<ll.Length();i++){
+        Insert(ll.Get(i));
+    }
+}
+
+
 /* Link List Define*/
+template <class type>
+LinkList<type>::LinkList(){
+    head = new LinkNode;
+    length = 0;
+}
 
 template<class type>
 LinkList<type>::LinkList(const LinkList & obj){
@@ -151,12 +182,6 @@ LinkList<type>::LinkList(const LinkList & obj){
 
 template<class type>
 LinkList<type>::~LinkList(){
-//    auto ptr = head;
-//    while(ptr){
-//        auto temp = ptr->next;
-//        delete ptr;
-//        ptr = temp;
-//    }
 }
 
 template<class type>
@@ -165,7 +190,7 @@ int LinkList<type>::GetLength() {
 }
 
 template<class type>
-type LinkList<type>::Get(int index) {
+type LinkList<type>::Get(int index) const {
     if(index<=length&&index>=0){
         auto ptr = head;
         while(index>0){
@@ -180,17 +205,17 @@ type LinkList<type>::Get(int index) {
 }
 
 template<class type>
-type LinkList<type>::Pre(int index) {
+type LinkList<type>::Pre(int index) const {
     return Get(index-1);
 }
 
 template<class type>
-type LinkList<type>::Next(int index) {
+type LinkList<type>::Next(int index) const {
     return Get(index+1);
 }
 
 template<class type>
-int LinkList<type>::Index(type x) {
+int LinkList<type>::Index(type x) const {
     auto ptr = head;
     int count = 0;
     while(ptr->data!=x && ptr != nullptr){
@@ -264,6 +289,7 @@ int LinkList<type>::DeleteByIndex(int index) {
         auto ptr = head;
         while(index>1){
             ptr = ptr->next;
+            index--;
         }
         auto temp = ptr->next;
         ptr->next = temp->next;
@@ -284,7 +310,7 @@ int LinkList<type>::IsEmpty() {
 }
 
 template<class type>
-void LinkList<type>::Traverse() {
+void LinkList<type>::Traverse() const {
     auto ptr = head->next;
     while(ptr){
         cout<<(*ptr).data<<' ';
@@ -298,34 +324,10 @@ int LinkList<type>::Update(int index, type x) {
     auto ptr = head;
     while(index>0){
         ptr = ptr->next;
+        index--;
     }
     ptr->data = x;
     return 1;
-}
-
-template<class type>
-void Stack<type>::Push(type x){
-    LinearList<type>::Insert(x,LinearList<type>::length);
-}
-
-template<class type>
-void Stack<type>::Pop(type* x){
-    *x = LinearList<type>::Get(LinearList<type>::length-1);
-    LinearList<type>::DeleteByIndex(LinearList<type>::length-1);
-}
-
-template<class type>
-int Stack<type>::GetTop(){return LinearList<type>::length;}
-
-template<class type>
-void Queue<type>::InQueue(type x){
-    LinearList<type>::Insert(x,LinearList<type>::length);
-}
-
-template<class type>
-void Queue<type>::OutQueue(type* x){
-    *x = LinearList<type>::Get(0);
-    LinearList<type>::DeleteByIndex(0);
 }
 
 template<class type>
@@ -337,118 +339,36 @@ void LinkList<type>::operator+(const LinkList<type> & linkList){
     }
 }
 
-
-int main() {
-    /*---????---*/
-//    LinearList<int> ls;
-//    for(int j=0;j<20;j++){
-//        ls.Insert(rand()%100,j);
-//    }
-//    ls.Traverse();
-//    printf("%d %d",ls.Length(),ls.Get(2));
-//    ls.Sort();
-//    ls.Traverse();
-//    LinearList<int> l2 = ls;
-//    l2.Update(0,100);
-//    l2.Traverse();
-//    ls.Traverse();
-//    ls.Clear();
-//    ls.Traverse();
-    /*---????---*/
-//    LinkList<int> ls;
-//    ls.Insert(2,0);
-//    LinkList<int> l2 = ls;
-//
-//    ls.Add(4);
-//    ls.Traverse();
-//    cout << ls.GetLength()<<'\n';
-//    cout << l2.GetLength()<<'\n';
-    /*---?---*/
-    /*
-     * 1
-Out of List!0
-     * */
-//    Stack<int> stack;
-//    stack.Push(1);
-//    int x;
-//    stack.Pop(&x);
-//    cout<<x<<endl;
-//    stack.Pop(&x);
-//    cout<<x<<endl;
-    /*---????---*/
-    /*  1
-        2   */
-//    Queue<int> queue;
-//    queue.InQueue(1);
-//    queue.InQueue(2);
-//    int x;
-//    queue.OutQueue(&x);
-//    cout<<x<<endl;
-//    queue.OutQueue(&x);
-//    cout<<x<<endl;
-
-    /*---???---*/
-    /*  1
-        2
-
-        2
-        1
-    */
-//    LinearList<int>* ls;
-//    Queue<int> queue;
-//    Stack<int> stack;
-//    ls = &queue;
-//    int x=0;
-//    ls->In(1);
-//    ls->In(2);
-//    ls->Out(&x);
-//    cout<<x<<endl;
-//    ls->Out(&x);
-//    cout<<x<<endl;
-//
-//    cout<<""<<endl;
-//
-//    ls = &stack;
-//    ls->In(1);
-//    ls->In(2);
-//    ls->Out(&x);
-//    cout<<x<<endl;
-//    ls->Out(&x);
-//    cout<<x<<endl;
-
-    /*---?????????---*/
-    /*0 1 2 3 4 10 9 8 7*/
-//    LinkList<int> linkList1;
-//    LinkList<int> linkList2;
-//    for(int i=0;i<5;i++){linkList1.Add(i);}
-//    for(int i=10;i>6;i--){linkList2.Add(i);}
-//    linkList1+linkList2;
-//    linkList1.Traverse();
-
-    /*---??---*/
-    /*2*/
-//    try{
-//        throw 2;
-//    }catch(int x){
-//        printf("%d",x);
-//    }
-
-    /*---?????????---*/
-    ofstream file1("D://C_Learn/List/123.txt");
-    ifstream file("D://C_Learn/List/123.txt");
-
-    for(int i=0;i<100;i++){
-        cout<<i<<endl;
-        file1<< 'a';
-    }
-    file1.close();
-    char x=' ';
-    while(file.get(x)){
-        cout<<x<<endl;
-    }
-    file.close();
-
+template<class type>
+int LinkList<type>::Insert(type x) {
+    return Insert(x,length);
 }
+
+template<class type>
+void Stack<type>::Push(type x){
+    LinearList<type>::Insert(x,LinearList<type>::Length());
+}
+
+template<class type>
+void Stack<type>::Pop(type* x){
+    *x = LinearList<type>::Get(LinearList<type>::Length()-1);
+    LinearList<type>::DeleteByIndex(LinearList<type>::Length()-1);
+}
+
+template<class type>
+int Stack<type>::GetTop(){return LinearList<type>::Length();}
+
+template<class type>
+void Queue<type>::InQueue(type x){
+    LinearList<type>::Insert(x,LinearList<type>::Length());
+}
+
+template<class type>
+void Queue<type>::OutQueue(type* x){
+    *x = LinearList<type>::Get(0);
+    LinearList<type>::DeleteByIndex(0);
+}
+
 
 
 
