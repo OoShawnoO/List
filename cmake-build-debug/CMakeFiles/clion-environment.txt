@@ -1,4 +1,4 @@
-ToolSet: w64 9.0 (local)@D:\CLion 2021.3\bin\mingw
-Options: 
+ToolSet: 16.0 (local)@D:\Visual Studio 2017
+Options: msvc.arch=amd64
 
 Options:-DCMAKE_MAKE_PROGRAM=D:/CLion 2021.3/bin/ninja/win/ninja.exe
