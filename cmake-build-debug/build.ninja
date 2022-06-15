@@ -56,13 +56,6 @@ build CMakeFiles\List.dir\main.cpp.obj: CXX_COMPILER__List_Debug D$:\C_Learn\Lis
   TARGET_COMPILE_PDB = CMakeFiles\List.dir\
   TARGET_PDB = List.pdb
 
-build CMakeFiles\List.dir\use.cpp.obj: CXX_COMPILER__List_Debug D$:\C_Learn\List\use.cpp || cmake_object_order_depends_target_List
-  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd -std:c++14
-  OBJECT_DIR = CMakeFiles\List.dir
-  OBJECT_FILE_DIR = CMakeFiles\List.dir
-  TARGET_COMPILE_PDB = CMakeFiles\List.dir\
-  TARGET_PDB = List.pdb
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target List
@@ -71,7 +64,7 @@ build CMakeFiles\List.dir\use.cpp.obj: CXX_COMPILER__List_Debug D$:\C_Learn\List
 #############################################
 # Link the executable List.exe
 
-build List.exe: CXX_EXECUTABLE_LINKER__List_Debug CMakeFiles\List.dir\main.cpp.obj CMakeFiles\List.dir\use.cpp.obj
+build List.exe: CXX_EXECUTABLE_LINKER__List_Debug CMakeFiles\List.dir\main.cpp.obj
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

@@ -4,6 +4,7 @@
 
 #ifndef LIST_MAIN_H
 #define LIST_MAIN_H
+using namespace std;
 template<class type>
 class SequenceList{
 public:
@@ -19,6 +20,8 @@ public:
     virtual int IsEmpty()=0;
     virtual void Traverse() const=0;
     virtual int Update(int,type)=0;
+    virtual int Serialize(FILE*)=0;
+    virtual int DeSerialize(FILE*)=0;
 };
 
 template<class type>
@@ -48,6 +51,8 @@ public:
     virtual void In(type x){};
     virtual void Out(type* x){};
     void operator+(const LinearList<type>& ll);
+    virtual int Serialize(FILE*);
+    virtual int DeSerialize(FILE*);
 };
 
 
@@ -60,7 +65,7 @@ private:
     public:
         type data;
         LinkNode* next;
-        explicit LinkNode(int _data=0):next(nullptr),data(data){}
+        explicit LinkNode(int _data=0):next(nullptr),data(_data){}
         LinkNode(const LinkNode & obj){
             data = *obj.data;
             next = new LinkNode;
@@ -87,7 +92,9 @@ public:
     virtual int IsEmpty();
     virtual void Traverse() const;
     virtual int Update(int index,type x);
-    virtual void operator+(const LinkList<type> & linkList);
+    void operator+(const LinkList<type> & linkList);
+    virtual int Serialize(FILE*);
+    virtual int DeSerialize(FILE*);
 };
 
 template<class type>

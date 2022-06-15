@@ -2,6 +2,7 @@
 #include "main.h"
 
 using namespace std;
+/*Linear List Define*/
 
 template <class type>
 LinearList<type>::LinearList(int Length):Len(Length),length(0){
@@ -37,7 +38,7 @@ type LinearList<type>::Get(int index) const {
         return list[index];
     }
     else {
-        printf("Out of List!");
+        printf("索引越界\n!");
         return NULL;
     }
 }
@@ -45,14 +46,14 @@ type LinearList<type>::Get(int index) const {
 template <class type>
 type LinearList<type>::Pre(int index) const {
     if(index-1>=0){return list[index];}
-    else{printf("Out of List!\n");return NULL;}
+    else{printf("索引越界!\n");return NULL;}
 }
 
 template <class type>
 type LinearList<type>::Next(int index) const {
     if(index+1<=Len&&index+1>=0){return list[index+1];}
     else{
-        printf("Out of List!");
+        printf("索引越界!\n");
         return NULL;
     }
 }
@@ -166,6 +167,30 @@ void LinearList<type>::operator+(const LinearList<type>& ll){
     }
 }
 
+template <class type>
+int LinearList<type>::Serialize(FILE* fp) {
+    if(!fp){return 0;}
+    fwrite(&Len, sizeof(Len), 1, fp);
+    fwrite(&length, sizeof(length), 1, fp);
+    for (int i = 0; i < length; i++) {
+        fwrite(&list[i], sizeof(type), 1, fp);
+    }
+    return 1;
+}
+
+template <class type>
+int LinearList<type>::DeSerialize(FILE* fp) {
+    if(!fp){return 0;}
+    fread(&Len,sizeof(Len),1,fp);
+    list = new int[Len];
+    fread(&length,sizeof(length),1,fp);
+    for(int i=0;i<length;i++){
+        fread(&list[i],sizeof(type),1,fp);
+    }
+    return 1;
+}
+
+
 
 /* Link List Define*/
 template <class type>
@@ -230,9 +255,7 @@ int LinkList<type>::Index(type x) const {
 
 template<class type>
 int LinkList<type>::Insert(type x, int index) {
-    auto node = new LinkNode;
-    node->data = x;
-    node->next = nullptr;
+    auto node = new LinkNode(x);
     length++;
     if(index>length){
         auto ptr = head;
@@ -349,6 +372,33 @@ void Stack<type>::Push(type x){
     LinearList<type>::Insert(x,LinearList<type>::Length());
 }
 
+template <class type>
+int LinkList<type>::Serialize(FILE* fp) {
+    if(!fp){return 0;}
+    fwrite(&length,sizeof(length),1,fp);
+    auto ptr = head->next;
+    for(int i=0;i<length;i++){
+        fwrite(&(ptr->data),sizeof(type),1,fp);
+        ptr = ptr->next;
+    }
+    return 1;
+}
+
+template <class type>
+int LinkList<type>::DeSerialize(FILE* fp) {
+    if(!fp){return 0;}
+    int len;
+    fread(&len,sizeof(len),1,fp);
+    for(int i=0;i<len;i++){
+        type x;
+        fread(&x,sizeof(type),1,fp);
+        Add(x);
+    }
+    return 1;
+}
+
+/* Stack Define*/
+
 template<class type>
 void Stack<type>::Pop(type* x){
     *x = LinearList<type>::Get(LinearList<type>::Length()-1);
@@ -368,7 +418,6 @@ void Queue<type>::OutQueue(type* x){
     *x = LinearList<type>::Get(0);
     LinearList<type>::DeleteByIndex(0);
 }
-
 
 
 
