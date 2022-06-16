@@ -31,8 +31,10 @@ private:
     type* list;
     int length;
 public:
+    static int count;
     explicit LinearList(int Length=100);
     LinearList(const LinearList & l);
+    ~LinearList();
     virtual void EmptyList();
     int Length() const;
     virtual type Get(int index) const;
@@ -75,6 +77,7 @@ private:
     LinkNode *head;
     int length;
 public:
+    static int count;
     LinkList();
     LinkList(const LinkList & obj);
     ~LinkList();

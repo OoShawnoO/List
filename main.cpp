@@ -4,12 +4,16 @@
 using namespace std;
 /*Linear List Define*/
 
+template<class type>
+int LinearList<type>::count;
+
 template <class type>
 LinearList<type>::LinearList(int Length):Len(Length),length(0){
     list = new type[Len];
     for(int i=0;i<Len;i++){
         list[i] = NULL;
     }
+    count++;
 }
 
 template <class type>
@@ -18,6 +22,14 @@ LinearList<type>::LinearList(const LinearList<type>& l):length(l.length){
         list[i] = l.list[i];
     }
     length = l.length;
+}
+
+template <class type>
+LinearList<type>::~LinearList<type>() {
+    delete []list;
+    delete &Len;
+    delete &length;
+    count--;
 }
 
 template <class type>
@@ -193,10 +205,14 @@ int LinearList<type>::DeSerialize(FILE* fp) {
 
 
 /* Link List Define*/
+template<class type>
+int LinkList<type>::count;
+
 template <class type>
 LinkList<type>::LinkList(){
     head = new LinkNode;
     length = 0;
+    count++;
 }
 
 template<class type>
@@ -207,6 +223,13 @@ LinkList<type>::LinkList(const LinkList & obj){
 
 template<class type>
 LinkList<type>::~LinkList(){
+    auto ptr = head;
+    while(ptr!=nullptr){
+        auto p = ptr->next;
+        delete ptr;
+        ptr = p;
+    }
+    count--;
 }
 
 template<class type>
@@ -418,7 +441,4 @@ void Queue<type>::OutQueue(type* x){
     *x = LinearList<type>::Get(0);
     LinearList<type>::DeleteByIndex(0);
 }
-
-
-
 
